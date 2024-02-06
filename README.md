@@ -20,15 +20,15 @@ Once the script finishes executing, it will have generated a directory called `s
 
 ### For convenience, the script generates information in separate files to easily locate:
 
-- Account status: `sec_report/$account/$account__account-status.txt`
-- Timestamp of last webmail login: `sec_report/$account/$account__last-login-on-webmail.txt`
-- Timestamp of last password change: `sec_report/$account/$account__pw-change.txt`
-- Account forwarding settings: `sec_report/$account/$account__forwarding.txt`
-- Access attempt logs: `sec_report/$account/$account__audit.txt`
-- Successful login logs: `sec_report/$account/$account__audit-login-successfully.txt`
-- IP addresses where successful login was recorded: `sec_report/$account/$account__audit-login-successfully-IPs.txt`
-- Messages sent by the user: `sec_report/$account/$account__sent.txt`
-- Messages received by the user: `sec_report/$account/$account__received.txt`
-- A general log of messages sent `using SASL authentication (all server users): sec_report/sent_messages_by_sasl_user.txt`
+- Account status: `sec_report/$account/$account_account-status.txt`
+- Timestamp of last webmail login: `sec_report/$account/$account_last-login-on-webmail.txt`
+- Timestamp of last password change: `sec_report/$account/$account_pw-change.txt`
+- Account forwarding settings: `sec_report/$account/$account_forwarding.txt`
+- Access attempt logs: `sec_report/$account/$account_audit.txt`
+- Successful login logs: `sec_report/$account/$account_audit-login-successfully.txt`
+- IP addresses where successful login was recorded: `sec_report/$account/$account_audit-login-successfully-IPs.txt`
+- Messages sent by the user: `sec_report/$account/$account_sent.txt`
+- Messages received by the user: `sec_report/$account/$account_received.txt`
+- A general log of messages sent using SASL authentication (all server users): `sec_report/sent_messages_by_sasl_user.txt`
 
 Additionally, to ensure that the original log records used are maintained so that it is possible to continue analyzing them as long as necessary (as log rotation will soon delete them), a copy of the original logs is maintained in `sec_report/log-files`.
