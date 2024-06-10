@@ -83,14 +83,14 @@ for email in $(cat ${email_accounts}); do
   echo "$(date +%d/%m/%Y-%H:%M:%S): Verificando logs de acesso da conta ${account}." | tee -a ${log}
   zcat ${auditlog}* | egrep "account=${email}" | tee -a ${export_dir}/${account}/${account}_audit.txt
   echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de acesso do audit.log foram salvos em ${export_dir}/${account}/${account}_audit.txt." | tee -a ${log}
-  echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de acesso foram salvos em ${export_dir}/${account}/${account}_audit.txt." | tee -a ${report}
+  echo "Logs de acesso foram salvos em ${export_dir}/${account}/${account}_audit.txt." | tee -a ${report}
   
   # Recupera logs de acesso (audit.log) em que não ocorreu falha
   echo "$(date +%d/%m/%Y-%H:%M:%S): Verificando logs de acesso com sucesso da conta ${account}." | tee -a ${log}
   echo "Apenas logs de acesso com sucesso da conta ${account}:" | tee -a ${export_dir}/${account}/${account}_audit-login-successfully.txt
   zcat ${auditlog}* | egrep "account=${email}" | egrep -v 'authentication failed|error=account lockout' | tee -a ${export_dir}/${account}/${account}_audit-login-successfully.txt
   echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de acesso com sucesso do audit.log foram salvos em ${export_dir}/${account}/${account}_audit-login-successfully.txt." | tee -a ${log}
-  echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de acesso com sucesso foram salvos em ${export_dir}/${account}/${account}_audit-login-successfully.txt." | tee -a ${report}
+  echo "Logs de acesso com sucesso foram salvos em ${export_dir}/${account}/${account}_audit-login-successfully.txt." | tee -a ${report}
   echo "$(date +%d/%m/%Y-%H:%M:%S): Gerando resumo de endereços IPs autenticados com sucesso" | tee -a ${log}
   for line in $(cat ${export_dir}/${account}/${account}_audit-login-successfully.txt); do
     echo $line | sed -n 's/.*oip=//p' | sed -n 's/;.*//p' | tee -a ${export_dir}/${account}/${account}_audit-login-successfully-IPs-temp.txt;
@@ -106,18 +106,22 @@ for email in $(cat ${email_accounts}); do
   echo "$(date +%d/%m/%Y-%H:%M:%S): Verificando mensagens enviadas pela conta ${account}." | tee -a ${log}
   /opt/zimbra/libexec/zmmsgtrace -s ${email} ${zimbralog}* | tee -a ${export_dir}/${account}/${account}_sent.txt
   echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de envio foram salvos em ${export_dir}/${account}/${account}_sent.txt." | tee -a ${log}
-  echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de envio foram salvos em ${export_dir}/${account}/${account}_sent.txt." | tee -a ${report}
+  qtd_sent=`cat ${export_dir}/${account}/${account}_sent.txt | grep "Message ID" | sort | uniq | wc -l`
+  echo "Quantidade de mensagens enviadas no período: ${qtd_sent}" | tee -a ${report}
+  echo "Logs de envio foram salvos em ${export_dir}/${account}/${account}_sent.txt." | tee -a ${report}
   
   # Recupera mensagens recebidas pelo usuário
   echo "$(date +%d/%m/%Y-%H:%M:%S): Verificando mensagens recebidas pela conta ${account}." | tee -a ${log}
   /opt/zimbra/libexec/zmmsgtrace -r ${email} ${zimbralog}* | tee -a ${export_dir}/${account}/${account}_received.txt
   echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de recebimento foram salvos em ${export_dir}/${account}/${account}_received.txt." | tee -a ${log}
-  echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de recebimento foram salvos em ${export_dir}/${account}/${account}_received.txt." | tee -a ${report}
+  qtd_receiv=`cat ${export_dir}/${account}/${account}_received.txt | grep "Message ID" | sort | uniq | wc -l`
+  echo "Quantidade de mensagens recebidas no período: ${qtd_receiv}" | tee -a ${report}
+  echo "Logs de recebimento foram salvos em ${export_dir}/${account}/${account}_received.txt." | tee -a ${report}
 done
 
 # Recuperando estatisticas de envio de e-mail atraves de autenticação SASL
 echo "$(date +%d/%m/%Y-%H:%M:%S): Verificando estatisticas de mensagens enviadas - total por usuário SASL." | tee -a ${log}
 zcat /var/log/zimbra.log* | sed -n 's/.*sasl_username=//p' | sort | uniq -c | sort -nr | tee -a ${export_dir}/sent_messages_by_sasl_user.txt
 echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de envio de mensagens por usuário SASL foram salvos em ${export_dir}/sent_messages_by_sasl_user.txt." | tee -a ${log}
-echo "$(date +%d/%m/%Y-%H:%M:%S): Logs de envio de mensagens por usuário SASL foram salvos em ${export_dir}/sent_messages_by_sasl_user.txt." | tee -a ${report}
+echo "Logs de envio de mensagens por usuário SASL foram salvos em ${export_dir}/sent_messages_by_sasl_user.txt." | tee -a ${report}
 echo -e "\n\n------------" | tee -a ${report}
